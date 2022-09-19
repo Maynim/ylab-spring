@@ -1,14 +1,13 @@
 package com.edu.ulab.app.service;
 
-
-import com.edu.ulab.app.dto.BookDto;
+import com.edu.ulab.app.entity.BookEntity;
 
 public interface BookService {
-    BookDto createBook(BookDto userDto);
+    BookEntity createBook(BookEntity bookEntity);
 
-    BookDto updateBook(BookDto userDto);
+    BookEntity updateBook(BookEntity bookEntity);
 
-    BookDto getBookById(Long id);
+    BookEntity getBookById(Long id);
 
     void deleteBookById(Long id);
 }

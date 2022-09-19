@@ -1,31 +1,43 @@
 package com.edu.ulab.app.service.impl;
 
-import com.edu.ulab.app.dto.BookDto;
+import com.edu.ulab.app.entity.BookEntity;
+import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.repository.BookRepository;
 import com.edu.ulab.app.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class BookServiceImpl implements BookService {
-    @Override
-    public BookDto createBook(BookDto bookDto) {
-        bookDto.setId(22L);
-        return bookDto;
+
+    private final BookRepository bookRepository;
+
+    public BookServiceImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
-    public BookDto updateBook(BookDto bookDto) {
-        return null;
+    public BookEntity createBook(BookEntity bookEntity) {
+        return bookRepository.save(bookEntity);
     }
 
     @Override
-    public BookDto getBookById(Long id) {
-        return null;
+    public BookEntity updateBook(BookEntity bookEntity) {
+        return bookRepository.update(bookEntity);
+    }
+
+    @Override
+    public BookEntity getBookById(Long id) {
+        Optional<BookEntity> maybeBook = bookRepository.findById(id);
+
+        return maybeBook.orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
     @Override
     public void deleteBookById(Long id) {
-
+        bookRepository.delete(id);
     }
 }
