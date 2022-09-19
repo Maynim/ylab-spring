@@ -21,9 +21,12 @@ import static com.edu.ulab.app.web.constant.WebConstant.RQID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = WebConstant.VERSION_URL + "/user",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(
+        value = WebConstant.VERSION_URL + "/user",
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
 public class UserController {
+
     private final UserDataFacade userDataFacade;
 
     public UserController(UserDataFacade userDataFacade) {
@@ -31,34 +34,81 @@ public class UserController {
     }
 
     @PostMapping(value = "/create")
-    @Operation(summary = "Create user book row.",
+    @Operation(
+            summary = "Create user with his books.",
             responses = {
-                    @ApiResponse(description = "User book",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserBookResponse.class)))})
+                    @ApiResponse(description = "User and his books",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserBookResponse.class)
+                            )
+                    )
+            }
+    )
     public UserBookResponse createUserWithBooks(@RequestBody UserBookRequest request,
-                                                @RequestHeader(RQID) @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
+
+                                                @RequestHeader(RQID)
+                                                @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
         UserBookResponse response = userDataFacade.createUserWithBooks(request);
         log.info("Response with created user and his books: {}", response);
         return response;
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping(value = "/update/{userId}")
+    @Operation(
+            summary = "Update user and add books.",
+            responses = {
+                    @ApiResponse(description = "User ID and books ID",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserBookResponse.class)
+                            )
+                    )
+            }
+    )
     public UserBookResponse updateUserWithBooks(@RequestBody UserBookRequest request,
-                                                @PathVariable Long userId) {
+                                                @PathVariable Long userId,
+
+                                                @RequestHeader(RQID)
+                                                @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
         UserBookResponse response = userDataFacade.updateUserWithBooks(request, userId);
         log.info("Response with updated user and his books: {}", response);
         return response;
     }
 
     @GetMapping(value = "/get/{userId}")
-    public UserBookResponse getUserWithBooks(@PathVariable Long userId) {
+    @Operation(
+            summary = "Get user and his books.",
+            responses = {
+                    @ApiResponse(description = "User ID and books ID",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserBookResponse.class)
+                            )
+                    )
+            }
+    )
+    public UserBookResponse getUserWithBooks(@PathVariable Long userId,
+
+                                             @RequestHeader(RQID)
+                                             @Pattern(regexp = REQUEST_ID_PATTERN) final String requestId) {
         UserBookResponse response = userDataFacade.getUserWithBooks(userId);
         log.info("Response with user and his books: {}", response);
         return response;
     }
 
     @DeleteMapping(value = "/delete/{userId}")
+    @Operation(
+            summary = "Delete user and their books.",
+            responses = {
+                    @ApiResponse(description = "Result message",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BaseWebResponse.class)
+                            )
+                    )
+            }
+    )
     public ResponseEntity<BaseWebResponse> deleteUserWithBooks(@PathVariable Long userId) {
         log.info("Delete user and his books:  userId {}", userId);
         return userDataFacade.deleteUserWithBooks(userId);
