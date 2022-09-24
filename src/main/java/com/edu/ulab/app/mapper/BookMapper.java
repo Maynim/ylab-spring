@@ -10,7 +10,11 @@ public interface BookMapper {
 
     BookDto bookRequestToBookDto(BookRequest bookRequest);
 
+    BookDto bookEntityToBookDto(BookEntity bookEntity);
+
     BookRequest bookDtoToBookRequest(BookDto bookDto);
 
     BookEntity bookRequestToBookEntity(BookRequest bookRequest);
+
+    BookEntity bookDtoToBookEntity(BookDto bookDto);
 }

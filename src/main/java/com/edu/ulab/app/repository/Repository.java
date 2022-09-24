@@ -11,7 +11,7 @@ public interface Repository<E extends BaseEntity> {
 
     void delete(Long id);
 
-    E update(E entity);
+    boolean update(E entity);
 
     Optional<E> findById(Long id);
 

@@ -23,7 +23,7 @@ public class Storage {
     }
 
     protected static void createNewTable(String table) {
-        if(maynimdb.containsKey(table)){
+        if (maynimdb.containsKey(table)) {
             throw new StorageException("Table already exists");
         }
 
@@ -68,13 +68,20 @@ public class Storage {
     }
 
     @SuppressWarnings("unchecked")
-    public static <E extends BaseEntity> void update(String table, E entity) {
+    public static <E extends BaseEntity> boolean update(String table, E entity) {
         if (!maynimdb.containsKey(table)) {
             throw new StorageException("Table not found");
         }
 
+        if (maynimdb.get(table).get(entity.getId()) == null) {
+            return false;
+        }
+
+
         Map<Long, E> entityMap = (Map<Long, E>) maynimdb.get(table);
         entityMap.put(entity.getId(), entity);
+
+        return true;
     }
 
     @SuppressWarnings("unchecked")

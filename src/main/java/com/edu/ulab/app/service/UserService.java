@@ -1,13 +1,22 @@
 package com.edu.ulab.app.service;
 
-import com.edu.ulab.app.entity.UserEntity;
+import com.edu.ulab.app.dto.BookDto;
+import com.edu.ulab.app.dto.UserDto;
+
+import java.util.List;
 
 public interface UserService {
-    UserEntity createUser(UserEntity userEntity);
+    UserDto createUser(UserDto userDto);
 
-    UserEntity updateUser(UserEntity userEntity);
+    UserDto updateUser(UserDto userDto);
 
-    UserEntity getUserById(Long id);
+    UserDto getUserById(Long id);
 
     void deleteUserById(Long id);
+
+    void setBookList(UserDto createdUser, List<BookDto> bookDtos);
+
+    BookDto addBookToUser(BookDto bookDto, UserDto mappedUser);
+
+    List<BookDto> getUserBooks(Long userId);
 }

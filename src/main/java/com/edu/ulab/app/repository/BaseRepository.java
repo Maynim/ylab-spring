@@ -27,9 +27,8 @@ public abstract class BaseRepository<E extends BaseEntity> implements Repository
     }
 
     @Override
-    public E update(E entity) {
-        Storage.update(table, entity);
-        return entity;
+    public boolean update(E entity) {
+        return Storage.update(table, entity);
     }
 
     @Override

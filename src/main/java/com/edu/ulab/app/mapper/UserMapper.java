@@ -9,7 +9,11 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     UserDto userRequestToUserDto(UserRequest userRequest);
 
+    UserDto userEntityToUserDto(UserEntity userEntity);
+
     UserRequest userDtoToUserRequest(UserDto userDto);
 
     UserEntity userRequestToUserEntity(UserRequest userRequest);
+
+    UserEntity userDtoToUserEntity(UserDto userDto);
 }
