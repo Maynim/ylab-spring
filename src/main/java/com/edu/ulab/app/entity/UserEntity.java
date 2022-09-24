@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Data
 @ToString(exclude = "bookList")
+@EqualsAndHashCode(exclude = "bookList")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

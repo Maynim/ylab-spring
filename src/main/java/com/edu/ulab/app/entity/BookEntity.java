@@ -3,7 +3,8 @@ package com.edu.ulab.app.entity;
 import lombok.*;
 
 @Builder
-@Data
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
