@@ -32,8 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         UserEntity userEntity = userMapper.userDtoToUserEntity(userDto);
+        log.info("Mapped user: {}", userEntity);
 
         UserEntity savedUser = userRepository.save(userEntity);
+        log.info("Saved user: {}", savedUser);
 
         return userMapper.userEntityToUserDto(savedUser);
     }
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto) {
         UserEntity userEntity = userMapper.userDtoToUserEntity(userDto);
+        log.info("Mapped user: {}", userEntity);
 
         boolean update = userRepository.update(userEntity);
         if (!update) {

@@ -9,7 +9,6 @@ import com.edu.ulab.app.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,8 +26,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto createBook(BookDto bookDto) {
         BookEntity bookEntity = bookMapper.bookDtoToBookEntity(bookDto);
+        log.info("Mapped book: {}", bookEntity);
 
         BookEntity savedBook = bookRepository.save(bookEntity);
+        log.info("Saved book: {}", savedBook);
 
         return  bookMapper.bookEntityToBookDto(savedBook);
     }
@@ -36,8 +37,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateBook(BookDto bookDto) {
         BookEntity bookEntity = bookMapper.bookDtoToBookEntity(bookDto);
+        log.info("Mapped book: {}", bookEntity);
 
         boolean update = bookRepository.update(bookEntity);
+        log.info("Update successful: {}", update);
         if (!update) {
             throw new NotFoundException("Book not found");
         }
@@ -48,18 +51,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> getBookById(Long id) {
         return Optional.of(bookRepository.findById(id)
-                .map(bookMapper::bookEntityToBookDto)
+                .map(bookEntity -> {
+                    BookDto bookMappedDto = bookMapper.bookEntityToBookDto(bookEntity);
+                    log.info("Mapped book: {}", bookMappedDto);
+
+                    return bookMappedDto;
+                })
                 .orElseThrow(() -> new NotFoundException("Book not found")));
     }
 
     @Override
     public void deleteBookById(Long id) {
         bookRepository.delete(id);
-    }
-
-    @Override
-    public List<BookDto> getBooksByUserId(Long id) {
-
-        return null;
     }
 }
