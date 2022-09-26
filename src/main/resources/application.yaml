@@ -1,6 +1,13 @@
 swagger-api:
   version: "1.0"
 
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
 server:
   port: 8091
   servlet:

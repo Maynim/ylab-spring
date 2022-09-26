@@ -5,6 +5,7 @@ import com.edu.ulab.app.exception.StorageException;
 
 import java.util.*;
 
+@Deprecated
 public class Storage {
     //todo создать хранилище в котором будут содержаться данные +
     // сделать абстракции через которые можно будет производить операции с хранилищем +
