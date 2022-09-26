@@ -1,3 +1,40 @@
+# Лекция 4
+
+## Реализация поставленных задач:
+
+[Ссылка на Pull request](https://github.com/Maynim/ylab-spring/pull/2).
+
+## Задачи:
+
+>1. Добавить поддержку базы данных
+
+Решение: [ссылка на коммит](https://github.com/Maynim/ylab-spring/pull/2/commits/8b6ae5218fbe68e36663bf48dc0c4a9b544a76fc).
+
+Доп. комментарии: В качестве бд была выбрана postgres, в связи с этим, `User` был переименован в `Person`
+
+>2. Реализовать репозиторий с помощью `JPA`
+
+Решение: [ссылка на коммит](https://github.com/Maynim/ylab-spring/pull/2/commits/f730cc151fbe5cc0bd72377022babe4127cac64d).
+
+>3. Реализовать репозиторий с помощью `JdbcTemplate`
+
+Решение: [ссылка на коммит](https://github.com/Maynim/ylab-spring/pull/2/commits/9037d6bf2969d9cb23876eb46c05e9319e3a07c7).
+
+Доп. комментарии: В переданном нам проекте доступ к базе данных осуществлялся в сервисе, что на мой взгляд показалось
+странным, поэтому реализацию `JdbcTemplate` я осуществил в репозитории, а для ее использования достаточно изменить
+конструктор в сервисах.
+
+>4. Исправить сервисы и мапперы
+
+Решение: [ссылка на коммит](https://github.com/Maynim/ylab-spring/pull/2/commits/c7e3562bbffbe26e79b6378ce8b3809b3fa535e2).
+
+>5. Исправить фасад
+
+Решение: [ссылка на коммит](https://github.com/Maynim/ylab-spring/pull/2/commits/f5a4eefbefac05ee42e3ece8a3d717651d3e1e93).
+
+[Ссылка для доступа к сваггеру](http://localhost:8091/app/swagger-ui/index.html)
+___
+
 # Лекция 3
 
 ## Реализация поставленных задач:
