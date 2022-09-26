@@ -1,11 +1,11 @@
 package com.edu.ulab.app.facade;
 
 import com.edu.ulab.app.dto.BookDto;
-import com.edu.ulab.app.dto.UserDto;
+import com.edu.ulab.app.dto.PersonDto;
 import com.edu.ulab.app.mapper.BookMapper;
-import com.edu.ulab.app.mapper.UserMapper;
+import com.edu.ulab.app.mapper.PersonMapper;
 import com.edu.ulab.app.service.BookService;
-import com.edu.ulab.app.service.UserService;
+import com.edu.ulab.app.service.PersonService;
 import com.edu.ulab.app.web.request.UserBookRequest;
 import com.edu.ulab.app.web.response.BaseWebResponse;
 import com.edu.ulab.app.web.response.UserBookResponse;
@@ -21,112 +21,112 @@ import java.util.Objects;
 @Component
 public class UserDataFacade {
 
-    private final UserService userService;
+    private final PersonService personService;
     private final BookService bookService;
-    private final UserMapper userMapper;
     private final BookMapper bookMapper;
+    private final PersonMapper personMapper;
 
-    public UserDataFacade(UserService userService,
+    public UserDataFacade(PersonService personService,
                           BookService bookService,
-                          UserMapper userMapper,
-                          BookMapper bookMapper) {
-        this.userService = userService;
+                          BookMapper bookMapper,
+                          PersonMapper personMapper) {
+        this.personService = personService;
         this.bookService = bookService;
-        this.userMapper = userMapper;
         this.bookMapper = bookMapper;
+        this.personMapper = personMapper;
     }
 
     public UserBookResponse createUserWithBooks(UserBookRequest userBookRequest) {
         log.info("Got user book create request: {}", userBookRequest);
 
-        UserDto mappedUser = userMapper.userRequestToUserDto(userBookRequest.getUserRequest());
-        log.info("Mapped user request: {}", mappedUser);
+        PersonDto mappedPerson = personMapper.userRequestToPersonDto(userBookRequest.getUserRequest());
+        log.info("Mapped person from request: {}", mappedPerson);
 
-        UserDto createdUser = userService.createUser(mappedUser);
-        log.info("Created user: {}", createdUser);
+        PersonDto createdPerson = personService.createPerson(mappedPerson);
+        log.info("Created person: {}", createdPerson);
 
         List<BookDto> bookDtoList = userBookRequest.getBookRequests()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(bookMapper::bookRequestToBookDto)
-                .peek(mappedBook -> mappedBook.setUserId(createdUser.getId()))
-                .peek(mappedBook -> log.info("Mapped book: {}", mappedBook))
-                .map(bookService::createBook)
-                .peek(createdBook -> log.info("Created book: {}", createdBook))
-                .toList();
+            .stream()
+            .filter(Objects::nonNull)
+            .map(bookMapper::bookRequestToBookDto)
+            .peek(mappedBook -> mappedBook.setUserId(createdPerson.getId()))
+            .peek(mappedBook -> log.info("Mapped book: {}", mappedBook))
+            .map(bookService::createBook)
+            .peek(createdBook -> log.info("Created book: {}", createdBook))
+            .toList();
         log.info("Collected books: {}", bookDtoList);
 
-        userService.setBookList(createdUser, bookDtoList);
-
         List<Long> booksIdList = bookDtoList.stream()
-                .map(BookDto::getId)
-                .toList();
+            .map(BookDto::getId)
+            .toList();
 
         return UserBookResponse.builder()
-                .userId(createdUser.getId())
-                .booksIdList(booksIdList)
-                .build();
+            .userId(createdPerson.getId())
+            .booksIdList(booksIdList)
+            .build();
     }
 
     public UserBookResponse updateUserWithBooks(UserBookRequest userBookRequest, Long userId) {
         log.info("Got user book update request: {}", userBookRequest);
 
-        UserDto mappedUser = userMapper.userRequestToUserDto(userBookRequest.getUserRequest());
-        mappedUser.setId(userId);
-        log.info("Mapped user request: {}", mappedUser);
+        PersonDto currPerson = personService.getPersonById(userId);
+        log.info("Person for update: {}", currPerson);
 
-        UserDto updatedUser = userService.updateUser(mappedUser);
+        PersonDto mappedPerson = personMapper.userRequestToPersonDto(userBookRequest.getUserRequest());
+        mappedPerson.setId(userId);
+        log.info("Mapped user request: {}", mappedPerson);
+
+        PersonDto updatedUser = personService.updatePerson(mappedPerson);
 
         List<BookDto> bookDtoList = userBookRequest.getBookRequests()
-                .stream()
-                .filter(Objects::nonNull)
-                .map(bookMapper::bookRequestToBookDto)
-                .peek(mappedBook -> mappedBook.setUserId(updatedUser.getId()))
-                .peek(mappedBook -> log.info("Mapped book: {}", mappedBook))
-                .map(bookService::createBook)
-                .map(addedBook -> userService.addBookToUser(addedBook, updatedUser))
-                .peek(addedBook -> log.info("Added book: {}", addedBook))
-                .toList();
+            .stream()
+            .filter(Objects::nonNull)
+            .map(bookMapper::bookRequestToBookDto)
+            .peek(mappedBook -> mappedBook.setUserId(updatedUser.getId()))
+            .peek(mappedBook -> log.info("Mapped book: {}", mappedBook))
+            .map(bookService::createBook)
+            .peek(addedBook -> log.info("Added book: {}", addedBook))
+            .toList();
         log.info("Collected books: {}", bookDtoList);
 
-        log.info("Updated user: {}", updatedUser);
+        log.info("Updated person: {}", updatedUser);
 
         List<Long> booksIdList = bookDtoList.stream()
-                .map(BookDto::getId)
-                .toList();
+            .map(BookDto::getId)
+            .toList();
 
         return UserBookResponse.builder()
-                .userId(updatedUser.getId())
-                .booksIdList(booksIdList)
-                .build();
+            .userId(updatedUser.getId())
+            .booksIdList(booksIdList)
+            .build();
     }
 
     public UserBookResponse getUserWithBooks(Long userId) {
-        UserDto getUser = userService.getUserById(userId);
-        log.info("Gotten user: {}", getUser);
+        PersonDto gottenPerson = personService.getPersonById(userId);
+        log.info("Gotten person: {}", gottenPerson);
 
-        List<BookDto> bookDtoList = userService.getUserBooks(userId);
+        List<BookDto> bookDtoList = bookService.getBooksByPersonId(userId);
 
         List<Long> booksIdList = bookDtoList.stream().map(BookDto::getId).toList();
 
         return UserBookResponse.builder()
-                .userId(getUser.getId())
-                .booksIdList(booksIdList)
-                .build();
+            .userId(gottenPerson.getId())
+            .booksIdList(booksIdList)
+            .build();
     }
 
     public ResponseEntity<BaseWebResponse> deleteUserWithBooks(Long userId) {
-        List<BookDto> userBooks = userService.getUserBooks(userId);
-        userBooks.forEach(book -> {
+        List<BookDto> personBooks = bookService.getBooksByPersonId(userId);
+        personBooks.forEach(book -> {
             bookService.deleteBookById(book.getId());
             log.info("Deleted book: {}", book);
         });
 
-        UserDto deletedUser = userService.getUserById(userId);
-        userService.deleteUserById(userId);
-        log.info("Deleted user: {}", deletedUser);
+        PersonDto deletedUser = personService.getPersonById(userId);
+        personService.deletePersonById(userId);
+        log.info("Deleted person: {}", deletedUser);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseWebResponse("Entities have been removed"));
+            .body(new BaseWebResponse("Entities have been removed"));
     }
 }
