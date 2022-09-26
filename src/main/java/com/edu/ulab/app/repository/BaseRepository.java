@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Deprecated
 public abstract class BaseRepository<E extends BaseEntity> implements Repository<E> {
 
     private final String table;
