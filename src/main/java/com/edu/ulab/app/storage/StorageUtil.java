@@ -1,7 +1,7 @@
 package com.edu.ulab.app.storage;
 
-import com.edu.ulab.app.entity.BookEntity;
-import com.edu.ulab.app.entity.UserEntity;
+import com.edu.ulab.app.entity.Book;
+import com.edu.ulab.app.entity.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.List;
 import static com.edu.ulab.app.storage.Storage.createNewTable;
 import static com.edu.ulab.app.storage.Storage.insertInto;
 
+@Deprecated
 public class StorageUtil {
 
     protected static void generateStorage() {
@@ -17,23 +18,23 @@ public class StorageUtil {
     }
 
     protected static void insertIntoStorage() {
-        BookEntity bookEntity = BookEntity.builder()
+        Book book = Book.builder()
                 .title("Abc")
                 .build();
 
-        BookEntity bookEntity2 = BookEntity.builder()
+        Book book2 = Book.builder()
                 .title("Zxc")
                 .build();
 
-        List<BookEntity> bookList = new ArrayList<>(List.of(bookEntity, bookEntity2));
+        List<Book> bookList = new ArrayList<>(List.of(book, book2));
 
-        UserEntity userEntity = UserEntity.builder()
+        Person person = Person.builder()
                 .fullName("Alex")
                 .bookList(bookList)
                 .build();
 
-        insertInto("book", bookEntity);
-        insertInto("book", bookEntity2);
-        insertInto("user", userEntity);
+        insertInto("book", book);
+        insertInto("book", book2);
+        insertInto("user", person);
     }
 }

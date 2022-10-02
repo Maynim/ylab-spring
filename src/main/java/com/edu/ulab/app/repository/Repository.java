@@ -5,6 +5,7 @@ import com.edu.ulab.app.entity.BaseEntity;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface Repository<E extends BaseEntity> {
 
     E save(E entity);

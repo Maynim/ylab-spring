@@ -2,6 +2,7 @@ package com.edu.ulab.app.entity;
 
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserEntity implements BaseEntity {
+@Entity
+public class Person implements BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fullName;
     private String title;
     private int age;
 
     @Builder.Default
-    private List<BookEntity> bookList = new ArrayList<>();
+    @OneToMany(mappedBy = "person")
+    private List<Book> bookList = new ArrayList<>();
 }
