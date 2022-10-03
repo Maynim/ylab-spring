@@ -2,11 +2,17 @@ swagger-api:
   version: "1.0"
 
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
   datasource:
     url: jdbc:postgresql://localhost:15432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
 
 server:
   port: 8091
