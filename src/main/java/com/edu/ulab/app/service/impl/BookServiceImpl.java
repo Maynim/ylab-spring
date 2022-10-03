@@ -4,7 +4,7 @@ import com.edu.ulab.app.dto.BookDto;
 import com.edu.ulab.app.entity.Book;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.BookMapper;
-import com.edu.ulab.app.repository.template.BookTemplateRepository;
+import com.edu.ulab.app.repository.BookRepository;
 import com.edu.ulab.app.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final BookTemplateRepository bookRepository;
+    private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
-    public BookServiceImpl(BookTemplateRepository bookRepository, BookMapper bookMapper) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
     }
@@ -40,22 +40,27 @@ public class BookServiceImpl implements BookService {
         Book book = bookMapper.bookDtoToBook(bookDto);
         log.info("Mapped book: {}", book);
 
-        Book updatedBook = bookRepository.save(book);
-        log.info("Updated book: {}", updatedBook);
+        Optional<Book> maybeBook = bookRepository.findById(book.getId());
+        return maybeBook.map(bookEntity -> {
+            BookDto bookMappedDto = bookMapper.bookToBookDto(bookEntity);
+            log.info("Updated book: {}", bookMappedDto);
 
-        return bookMapper.bookToBookDto(updatedBook);
+            return bookMappedDto;
+        })
+        .orElseThrow(() -> new NotFoundException("Book not found"));
+
     }
 
     @Override
-    public Optional<BookDto> getBookById(Long id) {
-        return Optional.of(bookRepository.findById(id)
+    public BookDto getBookById(Long id) {
+        return bookRepository.findById(id)
                 .map(bookEntity -> {
                     BookDto bookMappedDto = bookMapper.bookToBookDto(bookEntity);
-                    log.info("Mapped book: {}", bookMappedDto);
+                    log.info("Founded book: {}", bookMappedDto);
 
                     return bookMappedDto;
                 })
-                .orElseThrow(() -> new NotFoundException("Book not found")));
+                .orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
     @Override
@@ -66,7 +71,7 @@ public class BookServiceImpl implements BookService {
         maybeBook.ifPresentOrElse(
             bookRepository::delete,
             () -> {
-                throw new NotFoundException("User not found");
+                throw new NotFoundException("Book not found");
             }
         );
     }

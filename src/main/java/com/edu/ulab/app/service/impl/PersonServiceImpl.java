@@ -4,7 +4,7 @@ import com.edu.ulab.app.dto.PersonDto;
 import com.edu.ulab.app.entity.Person;
 import com.edu.ulab.app.exception.NotFoundException;
 import com.edu.ulab.app.mapper.PersonMapper;
-import com.edu.ulab.app.repository.template.PersonTemplateRepository;
+import com.edu.ulab.app.repository.PersonRepository;
 import com.edu.ulab.app.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import java.util.Optional;
 @Slf4j
 public class PersonServiceImpl implements PersonService {
 
-    private final PersonTemplateRepository personRepository;
+    private final PersonRepository personRepository;
     private final PersonMapper personMapper;
 
-    public PersonServiceImpl(PersonTemplateRepository personRepository, PersonMapper personMapper) {
+    public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper) {
         this.personRepository = personRepository;
         this.personMapper = personMapper;
     }
@@ -52,7 +52,7 @@ public class PersonServiceImpl implements PersonService {
         log.info("Received person: {}", maybePerson);
 
         return maybePerson.map(personMapper::personToPersonDto)
-            .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
@@ -61,10 +61,10 @@ public class PersonServiceImpl implements PersonService {
         log.info("Person for delete: {}", maybePerson);
 
         maybePerson.ifPresentOrElse(
-            personRepository::delete,
-            () -> {
-                throw new NotFoundException("User not found");
-            }
+                personRepository::delete,
+                () -> {
+                    throw new NotFoundException("User not found");
+                }
         );
     }
 }
