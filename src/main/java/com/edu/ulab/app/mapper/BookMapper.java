@@ -11,9 +11,9 @@ public interface BookMapper {
 
     BookDto bookRequestToBookDto(BookRequest bookRequest);
 
-    @Mapping(source = "person.id", target = "userId")
+    @Mapping(source = "person.id", target = "personId")
     BookDto bookToBookDto(Book book);
 
-    @Mapping(source = "userId", target = "person.id")
+    @Mapping(source = "personId", target = "person.id")
     Book bookDtoToBook(BookDto bookDto);
 }
